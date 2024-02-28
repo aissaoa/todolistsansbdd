@@ -1,0 +1,77 @@
+<div class="flex mx-auto rounded-full bg-white border border-gray-200 overflow-hidden" style="width: 400px;">
+    <input #newTaskInput type="text" placeholder="Ajoutez une tâche..." class="w-full py-2.5 pl-6 focus:outline-none"
+        aria-label="Recherche" (keyup.enter)="addTask(newTaskInput.value); newTaskInput.value=''" >
+    <button (click)="addTask(newTaskInput.value); newTaskInput.value=''" class="mr-5 font-bold">+</button>
+</div>
+<ul class="mt-5">
+    <li *ngFor="let task of tasks$ | async">
+        <label class="flex items-center justify-between mt-2 pb-2 ml-5 mr-5 cursor-pointer border-b border-gray-300">
+            <div class="flex justify-left">
+                <span class="flex-grow text-left mr-5" [ngClass]="{
+                    'line-through': task.state === 'finished',
+                }">{{ task.name.length > 30 ? (task.name | slice:0:30) + '...' :
+                    task.name }}</span>
+            </div>
+
+            <div>
+                <span [ngClass]="{
+                    'bg-orange-100 text-orange-700': task.state === 'in progress',
+                    'bg-green-100 text-green-700': task.state === 'finished',
+                    'bg-red-100 text-red-700': task.state === 'not started'
+                  }" class="inline-flex items-center justify-center rounded-full px-2.5 py-0.5">
+                    <p class="whitespace-nowrap text-sm">{{task.state}}</p>
+                    <button (click)="openModal(task)"
+                        class="-me-1 ms-1.5 inline-block rounded-full p-0.5 transition hover:bg-purple-300" [ngClass]="{
+                          'bg-orange-200 text-orange-700': task.state === 'in progress',
+                          'bg-green-200 text-green-700': task.state === 'finished',
+                          'bg-red-200 text-red-700': task.state === 'not started'
+                        }">
+                        <span class="sr-only">Change state</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="h-3 w-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+                        </svg>
+                    </button>
+                </span>
+                <button (click)="removeTask(task.id)" class="ml-2 p-1 transition hover:bg-red-200 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-red-700">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <span class="sr-only">Delete task</span>
+                </button>
+            </div>
+        </label>
+        <div *ngIf="selectedTask" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+                <!-- Bouton de fermeture -->
+                <button (click)="closeModal()" class="absolute top-0 right-0 mt-2 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="h-6 w-6 text-gray-700 hover:text-gray-900">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h3 class="text-lg font-semibold">Changer l'état de la tâche :</h3>
+                <h3 class="text-lg mb-4 text-center">{{ selectedTask.name }}</h3>
+
+                <div class="flex flex-row space-x-4 mb-4">
+                    <span (click)="updateTask(selectedTask.id, 'not started')"
+                        class="cursor-pointer rounded-full bg-red-100 px-2.5 py-0.5 text-sm text-red-700">not
+                        started</span>
+
+                    <span (click)="updateTask(selectedTask.id, 'in progress')"
+                        class="cursor-pointer rounded-full bg-orange-100 px-2.5 py-0.5 text-sm text-orange-700">in
+                        progress</span>
+
+                    <span (click)="updateTask(selectedTask.id, 'finished')"
+                        class="cursor-pointer rounded-full bg-green-100 px-2.5 py-0.5 text-sm text-green-700">finished</span>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </li>
+</ul>

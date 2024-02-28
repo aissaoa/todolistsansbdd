@@ -1,0 +1,35 @@
+<div class="flex justify-center pt-2">
+    <div class="sm:hidden">
+        <label for="Tab" class="sr-only">Tab</label>
+        <select id="Tab" class="w-full rounded-md border-gray-200">
+            <option>Courses</option>
+            <option>Taches</option>
+        </select>
+    </div>
+
+    <div class="hidden sm:block">
+        <nav class="flex gap-6" aria-label="Tabs">
+
+            <button [ngClass]="{
+                'bg-gray-200 text-gray-500': isShoppingSelected,
+                'text-gray-500 hover:bg-gray-50 hover:text-gray-700': !isShoppingSelected
+            }" class="shrink-0 rounded-lg p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                (click)="selectShopping()">
+                Courses
+            </button>
+            <button [ngClass]="{
+                'bg-gray-200 text-gray-500': isTaskSelected,
+                'text-gray-500 hover:bg-gray-50 hover:text-gray-700': !isTaskSelected
+            }" class="shrink-0 rounded-lg p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                (click)="selectTask()">
+                Taches
+            </button>
+        </nav>
+    </div>
+</div>
+<div class="flex justify-center pt-2" *ngIf="isTaskSelected">
+    <app-todolist></app-todolist>
+    
+</div>
+<div class="flex justify-center pt-2" *ngIf="isShoppingSelected">
+    <app-shopping-tasks></app-shopping-tasks>
